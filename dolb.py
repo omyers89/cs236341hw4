@@ -78,7 +78,7 @@ class LoadBlancer():
             new_jobs = max (t - time_delta,0)
             self.server_jobs[s] = new_jobs
 
-        temp_jobs = get_correct_time(rec)
+        temp_jobs = self.get_correct_time(rec)
         min = sys.maxint
         best = 0
         for s,t in temp_jobs.items():
@@ -99,7 +99,7 @@ class LoadBlancer():
             print "current server is: " + str(self.current_server_id)
             return self.connections[self.current_server_id]
         elif self.lb_algorithm == 1:
-            self.current_server_id = smart_rout1(new_request)
+            self.current_server_id = self.smart_rout(new_request)
             print "current server is: " + str(self.current_server_id)
             return self.connections[self.current_server_id]
 
