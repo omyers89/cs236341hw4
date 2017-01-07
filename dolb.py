@@ -2,6 +2,7 @@ import socket as SK
 from socket import socket
 import time
 from sys import exit
+import sys
 import copy
 import threading
 
@@ -38,6 +39,14 @@ class LoadBlancer():
         self.client_socket = None
         self.active_threads = []
         self.current_server_id = 0
+        self.server_jobs = {}
+        for s in self.servers:
+            self.server_jobs[s] = 0
+
+        self.last_rec_time = 0
+        
+        self.weight_db = {'V' : [1,1,3], 'P' : [1,1,2], 'M': [2,2,1]}
+
         
     def run_lb(self):
 
@@ -74,10 +83,66 @@ class LoadBlancer():
         #        new_client_socket.close()
 
 
+    def get_correct_time(self, rec):
+        c = rec[0]
+        t = rec[1]
+        real_weights = {0: self.server_jobs[0] + t*self.weight_db[c][0],
+                        1: self.server_jobs[1] + t*self.weight_db[c][1],
+                        2: self.server_jobs[2] + t*self.weight_db[c][2]}
+        return real_weights
+        
+
+
+
+    
+    def smart_rout(self, rec):
+        new_t = time.clock()
+        time_delta = new_t - self.last_rec_time
+
+        
+        for s,t  in self.server_jobs.items():
+            new_jobs = max (t - time_delta,0)
+            self.server_jobs[s] = new_jobs
+
+
+        temp_jobs = get_correct_time(rec)
+        
+        min = sys.maxint
+        best = 0
+        for s,t in temp_jobs.items():
+            if t < min:
+                min = t
+                best = s
+        
+        self.last_rec_time = new_t
+
+        self.server_jobs[best] = min
+
+        return best
+        #real_job_time = get_correct_time(rec,0)
+        #best_sev = 0
+        #min_jobs = self.server_jobs[best_sev]    
+        #real_job_time = get_correct_time(rec,s)
+
+
+        
+
+
+
     def pick_server(self, new_request):
-        self.current_server_id = (self.current_server_id + 1) % 3
-        print "current server is: " + str(self.current_server_id)
-        return self.connections[self.current_server_id]
+
+        if self.lb_algorithm == 0:
+            self.current_server_id = (self.current_server_id + 1) % 3
+            print "current server is: " + str(self.current_server_id)
+            return self.connections[self.current_server_id]
+        elif self.lb_algorithm == 1:
+            self.current_server_id = smart_rout1(new_request)
+            print "current server is: " + str(self.current_server_id)
+            return self.connections[self.current_server_id]
+
+
+
+
 
 
 
