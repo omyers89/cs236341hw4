@@ -64,7 +64,7 @@ class LoadBlancer():
             # proccess_time = int(request[1])
             best_server = self.pick_server(request) #TODO: routing algorithm return socket obj of selected server
 
-            t = ServerThread(new_client_socket, best_server, data)
+            t = ServerThread(new_client_socket, best_server, request)
             active_threads.append(t)
             t.start()
 
