@@ -57,7 +57,7 @@ class LoadBlancer():
 
             request = new_client_socket.recv(1024)
 
-            print "new mesage from: "+ client_ip
+            print "new mesage from: "+ client_ip[0]
             print "    message is: "  + request
 
             # media_type = request[0]
