@@ -77,7 +77,7 @@ class LoadBlancer():
     def pick_server(self, new_request):
         self.current_server_id = (self.current_server_id + 1) % 3
         print "current server is: " + str(self.current_server_id)
-        return self.connections[current_server_id]
+        return self.connections[self.current_server_id]
 
 
 
