@@ -44,6 +44,7 @@ class LoadBlancer():
         for s,i in self.servers.items():
             new_server_connection = socket(SK.AF_INET, SK.SOCK_STREAM)
             new_server_connection.connect(i)
+            print " connected to: " + i
             self.connections[s] = new_server_connection
 
         self.new_request = socket(SK.AF_INET, SK.SOCK_STREAM)
@@ -55,6 +56,9 @@ class LoadBlancer():
             #print to log
 
             request = new_client_socket.recv(1024)
+
+            print "new mesage from: "+ client_ip
+            print "    message is: "  + request
 
             # media_type = request[0]
             # proccess_time = int(request[1])
@@ -72,6 +76,7 @@ class LoadBlancer():
 
     def pick_server(self, new_request):
         self.current_server_id = (self.current_server_id + 1) % 3
+        print "current server is: " + self.current_server_id
         return self.connections[current_server_id]
 
 
@@ -81,3 +86,5 @@ if __name__ == '__main__':
     server_dict = {0:'192.168.0.101', 1:'192.168.0.102', 2:'192.168.0.103'}
     lb_IP = '10.0.0.1'
     lb = LoadBlancer(lb_IP, 80,server_dict)
+
+    lb.run_lb()
