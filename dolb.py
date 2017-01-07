@@ -35,7 +35,7 @@ class LoadBlancer():
         self.servers = serv_dict
         self.connections = {}
         self.lb_algorithm = v
-        self.new_request = None
+        self.client_socket = None
         self.active_threads = []
         self.current_server_id = 0
         
@@ -47,9 +47,9 @@ class LoadBlancer():
             print " connected to: " + i
             self.connections[s] = new_server_connection
 
-        self.new_request = socket(SK.AF_INET, SK.SOCK_STREAM)
-        self.new_request.bind((self.ip, self.port))
-        self.new_request.listen(5)
+        self.client_socket = socket(SK.AF_INET, SK.SOCK_STREAM)
+        self.client_socket.bind((self.ip, self.port))
+        self.client_socket.listen(5)
 
         while True:
             new_client_socket, client_ip = client_socket.accept()
