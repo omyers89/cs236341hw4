@@ -52,7 +52,7 @@ class LoadBlancer():
         self.client_socket.listen(5)
 
         while True:
-            new_client_socket, client_ip = client_socket.accept()
+            new_client_socket, client_ip = self.client_socket.accept()
             #print to log
 
             request = new_client_socket.recv(1024)
