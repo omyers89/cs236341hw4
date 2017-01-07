@@ -43,7 +43,7 @@ class LoadBlancer():
 
         for s,i in self.servers.items():
             new_server_connection = socket(SK.AF_INET, SK.SOCK_STREAM)
-            new_server_connection.connect((i, self.local_port))
+            new_server_connection.connect((i, self.port))
             print " connected to: " + i
             self.connections[s] = new_server_connection
 
